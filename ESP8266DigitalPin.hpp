@@ -14,6 +14,9 @@ class ESP8266DigitalPin {
     void setOn();
     void setOff();
     void toggle();
-    void pulseOn(uint8_t period);
+    void pulseOn(uint16_t period);
     void pulseOff();
+
+  private:
+    bool detachEvent();
 };

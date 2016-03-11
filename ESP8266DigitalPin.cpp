@@ -9,31 +9,40 @@ ESP8266DigitalPin::ESP8266DigitalPin(uint8_t _pin) {
 }
 
 ESP8266DigitalPin::~ESP8266DigitalPin() {
-    if (eventAttached) {
-        ticker.detach();
-    }
+    detachEvent();
+    pinMode(pin, INPUT);
 }
 
-void ESP8266DigitalPin::setOn() { digitalWrite(pin, HIGH); }
+void ESP8266DigitalPin::setOn() {
+    detachEvent();
+    digitalWrite(pin, HIGH);
+}
 
-void ESP8266DigitalPin::setOff() { digitalWrite(pin, LOW); }
+void ESP8266DigitalPin::setOff() {
+    detachEvent();
+    digitalWrite(pin, LOW);
+}
 
 void ESP8266DigitalPin::toggle() { digitalWrite(pin, !digitalRead(pin)); }
 
-void ESP8266DigitalPin::pulseOn(uint8_t period) {
+void ESP8266DigitalPin::pulseOn(uint16_t period) {
     // you don't need to call pulseOff before period change
-    if (eventAttached) {
-        pulseOff();
-    }
+    detachEvent();
 
     eventAttached = true;
     ticker.attach_ms(period, togglePin, pin);
 }
 
 void ESP8266DigitalPin::pulseOff() {
+    detachEvent();
+    digitalWrite(pin, LOW);
+}
+
+bool ESP8266DigitalPin::detachEvent() {
     if (eventAttached) {
         ticker.detach();
         eventAttached = false;
-        digitalWrite(pin, LOW);
+        return true;
     }
+    return false;
 }
