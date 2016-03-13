@@ -7,9 +7,10 @@ class ESP8266DigitalPin {
     Ticker ticker;
     uint8_t pin;
     bool eventAttached = false;
+    uint8_t onState = HIGH;
 
   public:
-    ESP8266DigitalPin(uint8_t _pin);
+    ESP8266DigitalPin(uint8_t _pin, uint8_t _onState = HIGH);
     virtual ~ESP8266DigitalPin();
     void setOn();
     void setOff();
